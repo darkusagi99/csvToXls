@@ -51,6 +51,25 @@ namespace csvToXls
 
             // Create sheetdatas
             SheetData xlSheetData = new SheetData();
+
+            Row xlHeaderRow = new Row();
+            foreach (DataColumn col in csvDataTable.Columns)
+            {
+                object cellData = col.ColumnName;
+                Cell xlCell = null;
+                if (cellData != null)
+                {
+                    xlCell = new Cell(new InlineString(new DocumentFormat.OpenXml.Spreadsheet.Text(cellData.ToString()))) { DataType = CellValues.InlineString };
+                }
+                else
+                {
+                    xlCell = new Cell(new InlineString(new DocumentFormat.OpenXml.Spreadsheet.Text(String.Empty))) { DataType = CellValues.InlineString };
+                }
+                xlHeaderRow.Append(xlCell);
+            }
+            xlSheetData.Append(xlHeaderRow);
+            
+            // Add content as lines
             foreach (DataRow row in csvDataTable.Rows)
             {
                 Row xlRow = new Row();
